@@ -53,6 +53,8 @@
 // This statement is more condensed, but less readable. It's not always a good idea to combine code like this, especially when it impacts the readability. After all, programming involves more reading than it does writing.
 
 // Complete a challenge activity using conditional operators
+using System.Diagnostics;
+
 Console.WriteLine("Welcome. To begin, press [Y], or press any other key to exit.");
 ConsoleKey userInput = GetUserKeyInput();
 
@@ -63,24 +65,29 @@ else
     Console.WriteLine("Exiting application...");
     Environment.Exit(0);
 }
-    
+
 void MainMenu()
 {
     Console.Title = "Main Menu";
     Console.Clear();
     Console.WriteLine("\t\t\t~~~ MAIN MENU ~~~");
-    Console.WriteLine("\nPress [1] to begin the Coin Flipper. \nOtherwise, press [Backspace] to exit the application.");
+    Console.WriteLine("\nPress [1] to begin the Coin Flipper.\nPress [2] to begin the Dice Battler. \nPress [0] to exit the application.");
     userInput = GetUserKeyInput();
 
-    if (userInput == ConsoleKey.D1)
-    {
-        FlipCoin();
-    }
-    else if (userInput == ConsoleKey.Backspace)
+    if (userInput == ConsoleKey.D0)
     {
         Console.WriteLine("\nExiting application. Goodbye!");
         Environment.Exit(0);
     }
+    else if (userInput == ConsoleKey.D1)
+    {
+        FlipCoin();
+    }
+    else if (userInput == ConsoleKey.D2)
+    {
+        DiceBattler();
+    }
+
 }
 
 void FlipCoin()
@@ -99,8 +106,8 @@ void FlipCoin()
     decimal headsPercentage = 0;
     decimal tailsPercentage = 0;
 
-    Console.WriteLine("\nPress [F] to flip a coin, or press the [Enter] key to exit and return to the main menu.\nYou can also press [C] to check how many coins have resulted in Heads or Tails!");
-    
+    Console.WriteLine("\nPress [F] to flip a coin, or press the [Backspace] key to exit and return to the main menu.\nYou can also press [C] to check how many coins have resulted in Heads or Tails!");
+
 
     while (true)
     {
@@ -108,7 +115,7 @@ void FlipCoin()
         string coinSide = coinFlip == 1 ? "Heads" : "Tails";
         userInput = GetUserKeyInput();
 
-        if (userInput == ConsoleKey.Enter)
+        if (userInput == ConsoleKey.Backspace)
         {
             Console.WriteLine("Exiting the Coin Flipper...\n");
             Console.WriteLine("Returning to Main Menu...\n");
@@ -119,8 +126,8 @@ void FlipCoin()
         {
             Thread.Sleep(200);
             Console.WriteLine("Flipping coin...\n");
-            Console.Beep(988, 100);
-            Console.Beep(1319, 200);
+            Console.Beep(988, 50);
+            Console.Beep(1319, 100);
 
             Console.WriteLine($"Coin Flip {++coinFlipTimes} result: {coinSide}");
             if (coinSide == "Heads") headsFlipped++;
@@ -138,6 +145,57 @@ void FlipCoin()
 
             continue;
         }
+    }
+}
+
+void DiceBattler()
+{
+    Console.Title = "Dice Battler";
+    Console.BackgroundColor = ConsoleColor.Red;
+    Console.ForegroundColor = ConsoleColor.White;
+    Console.Clear();
+    Console.WriteLine("\t\t\t~~~ DICE BATTLER ~~~");
+
+    int coinFlipTimes = 0;
+    int headsFlipped = 0;
+    int tailsFlipped = 0;
+    decimal headsPercentage = 0;
+    decimal tailsPercentage = 0;
+
+    Console.Write("Welcome to Dice Battler. To roll dice, press [D].\n");
+    userInput = GetUserKeyInput();
+
+    if (userInput == ConsoleKey.D)
+    {
+        int numberOfDice;
+        int dieType;
+
+        Console.WriteLine("\nType the number of dice to roll and how many sides.");
+        Console.Write("Die type (D4, D6, D8, D10, D12, D20, or D100): \nD");
+        dieType = Convert.ToInt32(Console.ReadLine());
+        Console.Write("Number of dice: ");
+        numberOfDice = Convert.ToInt32(Console.ReadLine());
+
+        int diceResult = RollDice(numberOfDice, dieType);
+        Console.Beep(400, 500);
+        Console.WriteLine("Rolling...");
+        Console.Beep(600, 500);
+        Console.WriteLine($"{numberOfDice} D{dieType} rolled, totaling {diceResult}");
+    }
+        
+    int RollDice(int numberOfDice, int dieType)
+    {
+        Random die = new Random();
+
+        int diceRollTotal = 0;
+
+        for (int i = 0; i < numberOfDice; i++)
+        {
+            diceRollTotal += die.Next(1, dieType + 1);
+            Debug.Print(Convert.ToString(diceRollTotal));
+        }
+
+        return diceRollTotal;
     }
 }
 
